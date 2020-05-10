@@ -162,6 +162,8 @@ GameObject:
   - component: {fileID: 512232610}
   - component: {fileID: 512232609}
   - component: {fileID: 512232608}
+  - component: {fileID: 512232611}
+  - component: {fileID: 512232612}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -227,13 +229,45 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512232607}
-  m_LocalRotation: {x: 0.27059805, y: -0.6532815, z: 0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: 230, y: 140, z: 105}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 80, y: 70, z: 75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1457566343}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &512232611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512232607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4fb070738f3544ea560ef08186d72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panLimit: {x: 120, y: 120}
+  minY: 40
+  maxY: 150
+  scrollSpeed: 10
+  panSpeed: 60
+  dragStartPosition: {x: 0, y: 0, z: 0}
+  dragCurrentPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &512232612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512232607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bd07797abbc8754eb87192f1fb7a004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetsTag: Tile
 --- !u!1 &834136085
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,6 +297,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4fb070738f3544ea560ef08186d72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panLimit: {x: 0, y: 0}
+  minY: 20
+  maxY: 150
+  scrollSpeed: 2
+  panSpeed: 30
+  dragStartPosition: {x: 0, y: 0, z: 0}
+  dragCurrentPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &834136087
 Transform:
   m_ObjectHideFlags: 0
