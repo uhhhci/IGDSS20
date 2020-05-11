@@ -495,9 +495,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 512232607}
-  mainCameraMovementSpeed: 0.1
-  zoomingSpeed: 1
-  boundariesOfTerrain: {x: -40, y: 40, z: -50, w: 30}
 --- !u!4 &834136087
 Transform:
   m_ObjectHideFlags: 0
