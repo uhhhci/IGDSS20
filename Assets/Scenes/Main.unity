@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 512232608}
   - component: {fileID: 512232611}
   - component: {fileID: 512232612}
+  - component: {fileID: 512232613}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -243,7 +244,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512232607}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c4fb070738f3544ea560ef08186d72d, type: 3}
   m_Name: 
@@ -269,6 +270,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetsTag: Tile
+--- !u!114 &512232613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512232607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d7ee547532bfc4cbaf9f7ebeacead1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTrasnform: {fileID: 512232610}
+  panLimit1: {x: 0, y: -120}
+  panLimit2: {x: 120, y: 50}
+  minY: 40
+  maxY: 200
+  normalSpeed: 5
+  fastSpeed: 12
+  movementSpeed: 5
+  movementTime: 5
+  rotationAmount: 5
+  zoomAmount: {x: 0, y: 0, z: 0}
+  newPosition: {x: 0, y: 0, z: 0}
+  newRotation: {x: 0, y: 0, z: 0, w: 0}
+  newZoom: {x: 0, y: 0, z: 0}
+  dragStartPosition: {x: 0, y: 0, z: 0}
+  dragCurrentPosition: {x: 0, y: 0, z: 0}
+  rotateStartPosition: {x: 0, y: 0, z: 0}
+  rotateCurrentPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &834136085
 GameObject:
   m_ObjectHideFlags: 0
