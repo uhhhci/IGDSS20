@@ -248,7 +248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4fb070738f3544ea560ef08186d72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panLimit: {x: 120, y: 120}
+  panLimit1: {x: 0, y: -120}
+  panLimit2: {x: 120, y: 50}
   minY: 40
   maxY: 150
   scrollSpeed: 10
@@ -297,7 +298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4fb070738f3544ea560ef08186d72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panLimit: {x: 0, y: 0}
+  panLimit1: {x: 0, y: 0}
+  panLimit2: {x: 0, y: 0}
   minY: 20
   maxY: 150
   scrollSpeed: 2
