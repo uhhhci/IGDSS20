@@ -1,24 +1,18 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/* 
- * Mouse control to 
- *      - move the camera by panning. 
- *      - zoom in/ out by scrolling. 
- *      - Click objects.  *      
- *      
- *      Camera has been rotated back to y=0° to make coding less confusing. --> CoSy fits to cam CoSy
- */
+/// <summary>
+/// Responsible for mouse movement including panning,zooming and clicking
+/// </summary>
 public class MouseManager : MonoBehaviour
 {
     // the main camera of the scene
     [Tooltip("Just put main camera in 0_O")]
     public GameObject mainCamera;
+    public CameraSettings cameraSettings;
 
-    // needs to fit to screensize
-    // ~ sensitivity of mouse. 0.1f should be fine.
-    private float mainCameraMovementSpeed = 0.1f;
 
     // need to be set from GameManager: Boundaries of terrain: min x (left), max x (right), min z (near), max z(far).
     // this are Demo data
@@ -31,15 +25,11 @@ public class MouseManager : MonoBehaviour
     // Boundaries of camera height: max: highest camera position (min zoom), min: lowest position (max zoom)
     private float boundaryMinY = 2.5f;
     private float boundaryMaxY = 75f;
-    private float zoomingSpeed = 10;
 
-    // position of mouse at first registation of right click
     private Vector3 lastMousePosition;
     
-    // updated to calculated position of camera
     private Vector3 CalculatedCamPos;
 
-    // to save calculated camera movements
     private Vector2 panMovement; 
     private float zoomYZMovement;
 
@@ -98,37 +88,37 @@ public class MouseManager : MonoBehaviour
         Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
         lastMousePosition = Input.mousePosition;
 
+        float mainCameraMovementSpeed = cameraSettings.MoveSpeed;
         // return calculated movement on x & z axis
         return new Vector2(
                 mouseDelta.x * mainCameraMovementSpeed,
                 mouseDelta.y * mainCameraMovementSpeed);        
     }
 
-
-    /* 
-     * calculates zooming movement for camera positioning. 
-     */ 
+    /// <summary>
+    /// calculates zooming movement for camera positioning.
+    /// </summary>
     private float zooming()
     {
-        return Input.mouseScrollDelta.y * zoomingSpeed * Time.deltaTime;
+        return Input.mouseScrollDelta.y * cameraSettings.ZoomSpeed * Time.deltaTime;
     }
 
 
     /* should be called by GameManager to set xz boundaries
      * Manupulations to z values are necessary because of the camera angle. 
      */ 
-    public void definePanning(float xMin, float xMax, float zMin, float zMax, float movementSpeed)
+    public void DefinePanningBoundaries(float xMin, float xMax, float zMin, float zMax)
     {        
-        (boundaryMinX, boundaryMaxX, boundaryMinZ, boundaryMaxZ, mainCameraMovementSpeed) = (xMin, xMax, zMin - 45, zMax - 5, movementSpeed);
+        (boundaryMinX, boundaryMaxX, boundaryMinZ, boundaryMaxZ) = (xMin, xMax, zMin - 45, zMax - 5);
     }
 
 
  /* should be called by GameManager to set xz boundaries
  * Set minimal and maximal height of camera. 
  */
-    public void defineZoom(float yMin, float yMax, float speed)
+    public void DefineZoomBoundaries(float yMin, float yMax)
     {
-        (boundaryMinY, boundaryMaxY, zoomingSpeed) = (yMin, yMax, speed);
+        (boundaryMinY, boundaryMaxY) = (yMin, yMax);
     }
 
     /*
