@@ -1009,6 +1009,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraManager: {fileID: 563056266}
   mouseManager: {fileID: 834136086}
+  _heightmap: {fileID: 2800000, guid: 6c8b8b5dee9104b429f737ec1d927ec9, type: 3}
+  _tileSet: {fileID: 11400000, guid: 2ffc378e19e67f44aba431610b4ce1f4, type: 2}
 --- !u!4 &1768092942
 Transform:
   m_ObjectHideFlags: 0
