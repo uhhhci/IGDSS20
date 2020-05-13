@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Enums;
+using Assets.Scripts.SerializableEvents;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,129 +10,74 @@ using UnityEngine;
 /// </summary>
 public class MouseManager : MonoBehaviour
 {
-    // the main camera of the scene
-    [Tooltip("Just put main camera in 0_O")]
-    public GameObject mainCamera;
-    public CameraSettings cameraSettings;
+    [SerializeField] private MouseSettings Settings;
+    public Vector3Event LeftClick;
+    public Vector3Event RightClickDrag;
+    public FloatEvent MouseScroll;
 
+    private Vector3 lastMousePosition = Vector3.zero;
+    private bool draggingRight;
 
-    // need to be set from GameManager: Boundaries of terrain: min x (left), max x (right), min z (near), max z(far).
-    // this are Demo data
-    private float boundaryMinX = -40f;
-    private float boundaryMaxX = 40f;
-    private float boundaryMinZ = 5 - 45;
-    private float boundaryMaxZ = 55 - 5;
-
-    // need to be set from GameManager:
-    // Boundaries of camera height: max: highest camera position (min zoom), min: lowest position (max zoom)
-    private float boundaryMinY = 2.5f;
-    private float boundaryMaxY = 75f;
-
-    private Vector3 lastMousePosition;
-    
-    private Vector3 CalculatedCamPos;
-
-    private Vector2 panMovement; 
-    private float zoomYZMovement;
-
-
-
-   
-    
-    // Update is called once per frame
     void Update()
     {
-        // CalculatedCamPos = mainCamera.transform.position;
+        if (Input.GetMouseButtonDown((int) MouseButton.LEFT))
+        {
+            LeftClick.Invoke(Input.mousePosition);
+        }
 
-        // saves this as last mouse pposition if button is pressed in this frame
-        if (Input.GetMouseButtonDown(1)) lastMousePosition = Input.mousePosition;        
-
-        // returns name of clicked object in console
-        if (Input.GetMouseButtonDown(0)) Debug.Log("Hello, I am " + getClickedObject());
-        
-        SetNewMainCamPos();
-    }
-
-    /* 
-     * Calculates and sets new positon of main camera
-     */
-    private void SetNewMainCamPos()
-    {
-        // get calculated cam movements
-        panMovement = Input.GetMouseButton(1) ? panning() : Vector2.zero;
-        zoomYZMovement = Input.mouseScrollDelta.y != 0 ? zooming() : 0f;
-
-        // calculate the theoretical camera position - not regarding boundaries/ max/ min zoom
-        // x is included in zooming to avoid "loosing focus". 
-        // Otherwise, the view screen would be moved while moving. (because of camera angle)
-        CalculatedCamPos = mainCamera.transform.position + new Vector3(
-            -panMovement.x,
-            -zoomYZMovement,
-            (zoomYZMovement - panMovement.y)
-            );
-
-        // Clamping the CamPos --> camera move within boundaries, has min/ max zoom. 
-        // Math.clamp() --> clamping --> camera moves only in boundaries of map. 
-        mainCamera.transform.position = new Vector3(
-            Mathf.Clamp(CalculatedCamPos.x, boundaryMinX, boundaryMaxX),
-            Mathf.Clamp(CalculatedCamPos.y, boundaryMinY, boundaryMaxY),
-            Mathf.Clamp(CalculatedCamPos.z, boundaryMinZ, boundaryMaxZ)
-            );
-    }
+        if (Input.GetMouseButtonDown((int) MouseButton.RIGHT))
+        {
+            draggingRight = true;
+        }
 
 
-    /*
-     * calculates xz movement for the camera
-     */
-    private Vector2 panning(){
-       // mouse movement since last frame
-       // save current mouse position as last one for next frame
-        Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
+        if (Input.GetMouseButtonUp((int) MouseButton.RIGHT))
+        {
+            draggingRight = false;
+        }
+
+        if (draggingRight)
+        {
+            var mouseMovement = GetMouseMovementSinceLastFrame();
+            RightClickDrag.Invoke(mouseMovement);
+        }
+
+        //Use only the y component as the x component is not set by Unity.
+        var mouseWheelDelta = GetMouseWheelRotationDifferenceSinceLastFrame();
+        if (Mathf.Abs(mouseWheelDelta) > Settings.ScrollThreshold)
+        {
+            MouseScroll.Invoke(mouseWheelDelta);
+        }
+
         lastMousePosition = Input.mousePosition;
-
-        float mainCameraMovementSpeed = cameraSettings.MoveSpeed;
-        // return calculated movement on x & z axis
-        return new Vector2(
-                mouseDelta.x * mainCameraMovementSpeed,
-                mouseDelta.y * mainCameraMovementSpeed);        
     }
 
-    /// <summary>
-    /// calculates zooming movement for camera positioning.
-    /// </summary>
-    private float zooming()
+    private Vector3 GetMouseMovementSinceLastFrame()
     {
-        return Input.mouseScrollDelta.y * cameraSettings.ZoomSpeed * Time.deltaTime;
+        return Input.mousePosition - lastMousePosition;
     }
 
-
-    /* should be called by GameManager to set xz boundaries
-     * Manupulations to z values are necessary because of the camera angle. 
-     */ 
-    public void DefinePanningBoundaries(float xMin, float xMax, float zMin, float zMax)
-    {        
-        (boundaryMinX, boundaryMaxX, boundaryMinZ, boundaryMaxZ) = (xMin, xMax, zMin - 45, zMax - 5);
-    }
-
-
- /* should be called by GameManager to set xz boundaries
- * Set minimal and maximal height of camera. 
- */
-    public void DefineZoomBoundaries(float yMin, float yMax)
+    private float GetMouseWheelRotationDifferenceSinceLastFrame()
     {
-        (boundaryMinY, boundaryMaxY) = (yMin, yMax);
+        return Input.mouseScrollDelta.y * Time.deltaTime;
     }
 
-    /*
-     * returns name of clicked object or error text if that's not possible. 
-     */ 
-    private string getClickedObject()
+    public GameObject FindClickedObject(Vector3 mousePosition)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 100)) return hit.transform.gameObject.name;
-        
-        return "unknown und probably too far away or too small to be clicked. Sorry :/";
+        if (Physics.Raycast(ray, out RaycastHit hit))
+            return hit.transform.gameObject;
+
+        return null;
+    }
+
+    public void PrintClickedObject(Vector3 mousePosition)
+    {
+        var clickedObject = FindClickedObject(mousePosition);
+        if (clickedObject is null)
+            return;
+
+        print($"Clicked object [ Name: {clickedObject.name} , Type: {clickedObject.GetType().Name}]");
     }
 }

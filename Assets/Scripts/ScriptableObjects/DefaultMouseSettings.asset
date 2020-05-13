@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf96aef8345180439449cc32c7042bf, type: 3}
-  m_Name: DefaultCameraSettings
+  m_Script: {fileID: 11500000, guid: 30feadd82543f6f4ca88b05122500cb2, type: 3}
+  m_Name: DefaultMouseSettings
   m_EditorClassIdentifier: 
+  ScrollThreshold: 0
