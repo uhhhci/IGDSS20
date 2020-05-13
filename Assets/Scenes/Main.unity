@@ -277,7 +277,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512232607}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16d7ee547532bfc4cbaf9f7ebeacead1, type: 3}
   m_Name: 
@@ -452,6 +452,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1457566343}
+  - component: {fileID: 1457566344}
   m_Layer: 0
   m_Name: Rendering
   m_TagString: Untagged
@@ -475,6 +476,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1457566344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457566342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d7ee547532bfc4cbaf9f7ebeacead1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTrasnform: {fileID: 512232610}
+  panLimit1: {x: 0, y: -120}
+  panLimit2: {x: 120, y: 50}
+  minY: 40
+  maxY: 150
+  normalSpeed: 2
+  fastSpeed: 5
+  movementSpeed: 1
+  movementTime: 5
+  rotationAmount: 1
+  zoomAmount: {x: 0, y: -10, z: -10}
+  newPosition: {x: 0, y: 0, z: 0}
+  newRotation: {x: 0, y: 0, z: 0, w: 0}
+  newZoom: {x: 0, y: 0, z: 0}
+  dragStartPosition: {x: 0, y: 0, z: 0}
+  dragCurrentPosition: {x: 0, y: 0, z: 0}
+  rotateStartPosition: {x: 0, y: 0, z: 0}
+  rotateCurrentPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1589499993
 GameObject:
   m_ObjectHideFlags: 0
