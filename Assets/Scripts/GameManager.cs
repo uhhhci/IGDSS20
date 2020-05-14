@@ -26,9 +26,8 @@ public class GameManager : MonoBehaviour
                 var color = _heightmap.GetPixel(x, y);
                 var grayValue = color.grayscale;
                 GameObject tile = GetTileFromColor(color);
-                var instantiatedTile = Instantiate(tile);
 
-                grid.AddCell(instantiatedTile, x, y);
+                grid.AddCell(tile, x, y);
                 grid.SetHeightOfCell(grayValue, x, y);
             }
         }
