@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/TileSet", order = 1)]
+[CreateAssetMenu(fileName = "data", menuName = "ScriptableObjects/TileSet", order = 1)]
 public class TileSet : ScriptableObject
 {
     public GameObject WaterTile;
