@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-
+{
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private MouseManager mouseManager;
     [SerializeField] private Texture2D _heightmap;

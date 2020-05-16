@@ -59,6 +59,12 @@ internal class HexagonalGrid : Map
         }
     }
 
+    public override void GetBoundaries()
+    {
+        var bounds = "";
+        return;
+    }
+
     private class HexComponent
     {
         public GameObject RenderObject { get; set; }
