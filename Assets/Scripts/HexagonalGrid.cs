@@ -13,7 +13,9 @@ internal class HexagonalGrid : Map
     private float cellHeight;
     private float cellWidth;
 
-    private float maxUpwardPlacement;
+    private float maxWorldPosOnXAxis;
+    private float maxWorldPosOnYAxis;
+    private float maxWorldPosOnZAxis;
 
 
     public HexagonalGrid(int width, int height, Vector2 cellDimensions, Vector3 origin = new Vector3())
@@ -37,8 +39,6 @@ internal class HexagonalGrid : Map
 
     internal void SetHeightOfCell(float height, int x, int y)
     {
-        maxUpwardPlacement = height > maxUpwardPlacement ? height : maxUpwardPlacement;
-
         grid[x, y].Height = height;
     }
 
@@ -55,7 +55,16 @@ internal class HexagonalGrid : Map
                 bool insettedRow = x % 2 == 0;
                 var inset = Convert.ToInt32(insettedRow) * (cellHeight * 0.5f);
 
-                var worldPosition = new Vector3(x * cellWidth * 0.75f, gridComponent.Height, y * cellHeight + inset);
+                float worldPosX = x * cellWidth * 0.75f;
+                float worldPosZ = y * cellHeight + inset;
+                float worldPosY = gridComponent.Height;
+
+                maxWorldPosOnXAxis = worldPosX > maxWorldPosOnXAxis ? worldPosX : maxWorldPosOnXAxis;
+                maxWorldPosOnYAxis = worldPosY > maxWorldPosOnYAxis ? worldPosY : maxWorldPosOnYAxis;
+                maxWorldPosOnZAxis = worldPosZ > maxWorldPosOnZAxis ? worldPosZ : maxWorldPosOnZAxis;
+
+
+                var worldPosition = new Vector3(worldPosX, worldPosY, worldPosZ);
                 var obj = UnityEngine.Object.Instantiate(gridComponent.RenderObject, worldPosition, Quaternion.identity);
                 obj.name = $"{x}:{y}";
 
@@ -66,9 +75,11 @@ internal class HexagonalGrid : Map
 
     public override Boundaries GetBoundaries()
     {
-        //TODO Improve algorithm, this is duplication
+        var lowerBounds = Origin;
+        lowerBounds.y = maxWorldPosOnYAxis;
         //TODO Fix rotation error - this fails if the final map is rotated in any way
-        var upperBounds = new Vector3(gridWidth * cellWidth * 0.75f, maxUpwardPlacement, (gridHeight + 1) * cellHeight);
+        //TODO Set sensible max zoom out level
+        var upperBounds = new Vector3(maxWorldPosOnXAxis, Mathf.Infinity, maxWorldPosOnZAxis);
         return new Boundaries(Origin, upperBounds);
     }
 
