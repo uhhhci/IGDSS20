@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
 
 
         var base_map = _mapManager.FromHeightmap(_heightmap, _tileSet, 5);
-        var bounds = base_map.GetBoundaries();
-        cameraManager.cameraBoundaries = bounds;
         _mapManager.DrawMap(base_map);
+
+        var bounds = base_map.GetBoundaries();
+        print(bounds);
+        cameraManager.cameraBoundaries = bounds;
     }
 }
