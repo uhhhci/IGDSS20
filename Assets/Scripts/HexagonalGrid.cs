@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Linq;
 
 internal class HexagonalGrid : Map
 {
@@ -11,6 +12,8 @@ internal class HexagonalGrid : Map
 
     private float cellHeight;
     private float cellWidth;
+
+    private float maxUpwardPlacement;
 
 
     public HexagonalGrid(int width, int height, Vector2 cellDimensions, Vector3 origin = new Vector3())
@@ -34,6 +37,8 @@ internal class HexagonalGrid : Map
 
     internal void SetHeightOfCell(float height, int x, int y)
     {
+        maxUpwardPlacement = height > maxUpwardPlacement ? height : maxUpwardPlacement;
+
         grid[x, y].Height = height;
     }
 
@@ -59,10 +64,12 @@ internal class HexagonalGrid : Map
         }
     }
 
-    public override void GetBoundaries()
+    public override Boundaries GetBoundaries()
     {
-        var bounds = "";
-        return;
+        //TODO Improve algorithm, this is duplication
+        //TODO Fix rotation error - this fails if the final map is rotated in any way
+        var upperBounds = new Vector3(gridWidth * cellWidth * 0.75f, maxUpwardPlacement, (gridHeight + 1) * cellHeight);
+        return new Boundaries(Origin, upperBounds);
     }
 
     private class HexComponent

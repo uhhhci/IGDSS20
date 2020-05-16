@@ -16,9 +16,10 @@ public class GameManager : MonoBehaviour
     {
         _ = _heightmap ?? throw new ArgumentNullException("Heightmap for map generation has not been set! Set one in the GameManager script");
 
-        cameraManager.cameraBoundaries = new Boundaries(lowerBounds, upperBounds);
-        
+
         var base_map = _mapManager.FromHeightmap(_heightmap, _tileSet, 5);
+        var bounds = base_map.GetBoundaries();
+        cameraManager.cameraBoundaries = bounds;
         _mapManager.DrawMap(base_map);
     }
 }
