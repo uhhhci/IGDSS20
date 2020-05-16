@@ -13,6 +13,11 @@ public class Boundaries
 		UpperBoundaries = upperBoundaries;
 	}
 
+	public override string ToString()
+	{
+		return $"{LowerBoundaries} - {UpperBoundaries}";
+	}
+
 
 	public Vector3 ClampToBoundaries(Vector3 value)
 	{
