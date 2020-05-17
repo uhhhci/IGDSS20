@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Texture2D _heightmap;
     [SerializeField] private MapManager _mapManager;
     [SerializeField] private TileSet _tileSet;
+    [Tooltip("Allow the camera to move past the map's boundaries in relation to the camera angle")]
+    [SerializeField] private bool AllowCameraAngleToInfluenceBoundaries;
 
 
     void Start()
@@ -21,7 +23,10 @@ public class GameManager : MonoBehaviour
         _mapManager.DrawMap(base_map);
 
         var bounds = base_map.GetBoundaries();
-        print(bounds);
+
+        if (AllowCameraAngleToInfluenceBoundaries)
+            bounds.OffsetBoundaries(cameraManager.CalculateOffsetFromCameraAngle());
+
         cameraManager.cameraBoundaries = bounds;
     }
 }

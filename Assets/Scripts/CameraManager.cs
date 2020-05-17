@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
@@ -48,5 +50,19 @@ public class CameraManager : MonoBehaviour
     {
         var zoomedAmount = amount * cameraSettings.ZoomSpeed;
         CalculatedMovement += new Vector3(0, -zoomedAmount, zoomedAmount);
+    }
+
+    public Vector3 CalculateOffsetFromCameraAngle()
+    {
+        //TODO Allow for rotation
+        var rotationVector = activeCamera.transform.rotation.eulerAngles;
+        var angles = new List<float> { rotationVector.x, rotationVector.y, rotationVector.z };
+
+        foreach (var angle in angles.Where(x => x != 0))
+        {
+            //Hardcoded for now, as camera rotation is not allowed
+        }
+
+        return new Vector3(0,0,75 * Mathf.Tan(Mathf.Deg2Rad * rotationVector.x)); 
     }
 }
