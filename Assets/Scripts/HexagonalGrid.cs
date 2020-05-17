@@ -49,19 +49,13 @@ internal class HexagonalGrid : Map
         var parent = new GameObject("MapGrid");
         parent.transform.position = Origin;
 
-        for (int x = 0; x < gridWidth; x++)
+        foreach (var gridComponent in grid)
         {
-            for (int y = 0; y < gridHeight; y++)
-            {
-                HexComponent gridComponent = grid[x, y];
+            var worldPos = gridComponent.WorldPosition;
 
-                var worldPos = gridComponent.WorldPosition;
+            var obj = UnityEngine.Object.Instantiate(gridComponent.RenderObject, worldPos, Quaternion.identity);
 
-                var obj = UnityEngine.Object.Instantiate(gridComponent.RenderObject, worldPos, Quaternion.identity);
-                obj.name = $"{x}:{y}";
-
-                obj.transform.SetParent(parent.transform, false);
-            }
+            obj.transform.SetParent(parent.transform, false);
         }
     }
 
@@ -94,7 +88,7 @@ internal class HexagonalGrid : Map
     private class HexComponent
     {
         public GameObject RenderObject { get; set; }
-        public Vector3 WorldPosition{ get; set; }
+        public Vector3 WorldPosition { get; set; }
 
         internal void SetHeight(float height)
         {
