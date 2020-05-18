@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5035642893912111872}
   - component: {fileID: 7705308161907293228}
   - component: {fileID: 2810648041492908100}
-  - component: {fileID: 4296425399565363864}
+  - component: {fileID: 2624302835536061707}
   m_Layer: 8
   m_Name: BaseTile
   m_TagString: Untagged
@@ -81,7 +81,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &4296425399565363864
+--- !u!64 &2624302835536061707
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
