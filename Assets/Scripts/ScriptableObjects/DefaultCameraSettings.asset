@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf96aef8345180439449cc32c7042bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 5978ec326cabbe349b2858cb7a1fbbed, type: 3}
   m_Name: DefaultCameraSettings
   m_EditorClassIdentifier: 
   MoveSpeed: 0.1
