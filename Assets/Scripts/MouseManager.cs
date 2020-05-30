@@ -63,11 +63,14 @@ public class MouseManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.CompareTag("Tile"))
-                {
-                    Debug.Log("click on tile: " + hit.collider.gameObject.name);
-                }
+                Tile tile = null;
 
+                tile = hit.collider.GetComponent<Tile>();
+                if (!tile)
+                    tile = hit.collider.GetComponentInParent<Tile>();
+
+                if (tile)
+                    Debug.Log(tile.name);
             }
         }
     }
