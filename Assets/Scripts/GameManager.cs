@@ -170,18 +170,42 @@ public class GameManager : MonoBehaviour
     {
         List<Tile> result = new List<Tile>();
 
-        //TODO: put all neighbors in the result list
+        int x = t._coordinateWidth;
+        int z = t._coordinateHeight;
+
+        tryAddTileAsNeighbour(t, result, x, z - 1);
+        tryAddTileAsNeighbour(t, result, x, z + 1);
+
+        bool isOddRow = (x % 2) != 0;
+        if (isOddRow)
+        {
+            tryAddTileAsNeighbour(t, result, x - 1, z);
+            tryAddTileAsNeighbour(t, result, x - 1, z + 1);
+
+            tryAddTileAsNeighbour(t, result, x + 1, z);
+            tryAddTileAsNeighbour(t, result, x + 1, z + 1);
+        }
+        else
+        {
+            tryAddTileAsNeighbour(t, result, x - 1, z);
+            tryAddTileAsNeighbour(t, result, x - 1, z - 1);
+
+            tryAddTileAsNeighbour(t, result, x + 1, z);
+            tryAddTileAsNeighbour(t, result, x + 1, z - 1);
+        }
 
         return result;
     }
-	
-	 private void createTileField()
+
+    private void createTileField()
     {
         int nRowsZ = heightMap.width;
         int nRowsX = heightMap.height;
+        _tileMap = new Tile[nRowsX, nRowsZ];
 
         Vector3[][] tilePositions = generateTileGrid(nRowsZ, nRowsX);
 
+        // spwan tiles
         for (int z = 0; z < nRowsZ; z++)
         {
             for (int x = 0; x < nRowsX; x++)
@@ -217,9 +241,34 @@ public class GameManager : MonoBehaviour
                 position.y = color.maxColorComponent * tileMaxOffsetY;
 
                 if (newTile)
-                    Instantiate(newTile, position, Quaternion.identity);
+                {
+                    GameObject tileObject = Instantiate(newTile, position, Quaternion.identity);
+                    Tile tile = tileObject.GetComponent<Tile>();
+                    tile._coordinateWidth = x;
+                    tile._coordinateHeight = z;
+
+                    _tileMap[x, z] = tile;
+                }
+
             }
         }
+
+        // set tile neighbours
+        for (int z = 0; z < _tileMap.GetLength(1); z++)
+        {
+            for (int x = 0; x < _tileMap.GetLength(0); x++)
+            {
+                Tile tile = _tileMap[x, z];
+                tile._neighborTiles = FindNeighborsOfTile(tile);
+            }
+        }
+    }
+
+
+    private void tryAddTileAsNeighbour(Tile tile, List<Tile> tileList, int neighbourX, int neighbourZ)
+    {
+        if ((neighbourX >= 0) && (neighbourX < _tileMap.GetLength(0)) && (neighbourZ >= 0) && (neighbourZ < _tileMap.GetLength(1)))
+            tileList.Add(_tileMap[neighbourX, neighbourZ]);
     }
 
 

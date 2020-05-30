@@ -21,7 +21,7 @@ public class TargetName : MonoBehaviour
             {
                 if (hit.transform.CompareTag(targetsTag))
                 {
-                    Debug.Log(hit.collider.gameObject.name);
+                    Debug.Log("click on tile: " + hit.collider.gameObject.name);
                 }
 
             }
