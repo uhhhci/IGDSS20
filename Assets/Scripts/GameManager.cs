@@ -65,10 +65,31 @@ public class GameManager : MonoBehaviour
     {
         HandleKeyboardInput();
         UpdateInspectorNumbersForResources();
+        handleClickOnTile();
     }
     #endregion
 
     #region Methods
+    private void handleClickOnTile()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Tile tile = null;
+
+                tile = hit.collider.GetComponent<Tile>();
+                if (!tile)
+                    tile = hit.collider.GetComponentInParent<Tile>();
+
+                if (tile)
+                    Debug.Log(tile.name);
+            }
+        }
+    }
+
     //Makes the resource dictionary usable by populating the values and keys
     void PopulateResourceDictionary()
     {

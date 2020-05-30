@@ -52,27 +52,6 @@ public class MouseManager : MonoBehaviour
     void HandleMouseInput()
     {
         handleCameraMovement();
-        handleClickOnTile();
-    }
-
-    private void handleClickOnTile()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                Tile tile = null;
-
-                tile = hit.collider.GetComponent<Tile>();
-                if (!tile)
-                    tile = hit.collider.GetComponentInParent<Tile>();
-
-                if (tile)
-                    Debug.Log(tile.name);
-            }
-        }
     }
 
     private void handleCameraMovement()
