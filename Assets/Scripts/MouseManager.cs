@@ -51,6 +51,29 @@ public class MouseManager : MonoBehaviour
 
     void HandleMouseInput()
     {
+        handleCameraMovement();
+        handleClickOnTile();
+    }
+
+    private void handleClickOnTile()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.CompareTag("Tile"))
+                {
+                    Debug.Log("click on tile: " + hit.collider.gameObject.name);
+                }
+
+            }
+        }
+    }
+
+    private void handleCameraMovement()
+    {
         if (Input.mouseScrollDelta.y != 0)
         {
             newZoom += Input.mouseScrollDelta.y * zoomAmount;
