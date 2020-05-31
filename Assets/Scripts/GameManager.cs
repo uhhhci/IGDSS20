@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Methods
+
     private void handleClickOnTile()
     {
         if (Input.GetMouseButtonDown(0))
@@ -85,7 +86,33 @@ public class GameManager : MonoBehaviour
                     tile = hit.collider.GetComponentInParent<Tile>();
 
                 if (tile)
-                    Debug.Log(tile.name);
+                {
+                    Debug.Log("Click on Tile: " + tile.name);
+
+                    bool canBuild = true; //todo check resources, 
+                    //if there already is a building, 
+                    // if selected building ca be build on this
+
+                    if(canBuild)
+                    {
+                        //invisible decorations to place building
+                        foreach(MeshRenderer decoration in tile.GetComponentsInChildren<MeshRenderer>())
+                        {
+                            if (decoration.name.Contains("Tile"))
+                                continue;
+                            decoration.enabled = false;
+                        }
+
+                        //place building
+                        Vector3 position = tile.transform.position + _buildingPrefabs[_selectedBuildingPrefabIndex].transform.position;
+                        GameObject buildingObject = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], position, Quaternion.identity);
+                        Building building = buildingObject.GetComponent<Building>();
+                        tile._building = building;
+                        building.tileBuildOn = tile;
+                        building.gameManager = this;
+                    }
+                }
+                    
             }
         }
     }
@@ -164,6 +191,16 @@ public class GameManager : MonoBehaviour
     public bool HasResourceInWarehoues(ResourceTypes resource)
     {
         return _resourcesInWarehouse[resource] >= 1;
+    }
+
+    public void TakeResourceFromWareHouse(ResourceTypes resource)
+    {
+        _resourcesInWarehouse[resource] -= 1;
+    }
+
+    public void PutResourceInWareHouse(ResourceTypes resource, float ammount)
+    {
+        _resourcesInWarehouse[resource] += ammount;
     }
 
     //Is called by MouseManager when a tile was clicked

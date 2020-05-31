@@ -247,7 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd07797abbc8754eb87192f1fb7a004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetsTag: Tile
 --- !u!1 &834136085
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +504,17 @@ MonoBehaviour:
   tileDistanceX: 8.83
   tileOffsetZOddRow: 5
   tileMaxOffsetY: 40
+  _buildingPrefabs:
+  - {fileID: 5416501994990056478, guid: 3f70d86239a718f4e85a75232f01d211, type: 3}
+  - {fileID: 3593205469656735091, guid: 94193c0e30c621046af84f03a19d47e5, type: 3}
+  _selectedBuildingPrefabIndex: 0
+  _ResourcesInWarehouse_Fish: 0
+  _ResourcesInWarehouse_Wood: 0
+  _ResourcesInWarehouse_Planks: 0
+  _ResourcesInWarehouse_Wool: 0
+  _ResourcesInWarehouse_Clothes: 0
+  _ResourcesInWarehouse_Potato: 0
+  _ResourcesInWarehouse_Schnapps: 0
 --- !u!4 &1768092942
 Transform:
   m_ObjectHideFlags: 0
