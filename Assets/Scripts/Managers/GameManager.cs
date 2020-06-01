@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Allow the camera to move past the map's boundaries in relation to the camera angle")]
     [SerializeField] private bool AllowCameraAngleToInfluenceBoundaries;
 
+    private int moneyPool;
 
     void Start()
     {
@@ -28,5 +27,41 @@ public class GameManager : MonoBehaviour
             bounds.OffsetBoundaries(cameraManager.CalculateOffsetFromCameraAngle());
 
         cameraManager.cameraBoundaries = bounds;
+
+    }
+
+
+    void Update()
+    {
+        // Every 60 sec 
+        // tickEconomy()
+    }
+
+
+    private void TickEconomy()
+    {
+        // constant income
+        moneyPool += 100;
+        // pay upkeep costs
+        getAllUpkeepCost();
+    }
+
+
+    private int getAllUpkeepCost()
+    {
+        // TODO
+        return 10;
+    }
+
+    // Add resource of given type to warehouse
+    public void winResource(ResourcesType res, int count)
+    {
+        // TODO
+    }
+
+    // remove resource of given type to warehouse
+    public void removeResource(ResourcesType res, int count)
+    {
+        // TODO
     }
 }
