@@ -102,34 +102,26 @@ public class GameManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Tile tile = null;
+                Tile t = null;
 
-                tile = hit.collider.GetComponent<Tile>();
-                if (!tile)
-                    tile = hit.collider.GetComponentInParent<Tile>();
+                t = hit.collider.GetComponent<Tile>();
+                if (!t)
+                    t = hit.collider.GetComponentInParent<Tile>();
 
-                if (tile)
+                if (t)
                 {
-                    Debug.Log("Click on Tile: " + tile.name);
-                    if(canBuildOntile(_buildingPrefabs[_selectedBuildingPrefabIndex], tile))
+                    // set tile neighbours
+                    for (int z = 0; z < _tileMap.GetLength(1); z++)
                     {
-                        //invisible decorations to place building
-                        foreach(MeshRenderer decoration in tile.GetComponentsInChildren<MeshRenderer>())
+                        for (int x = 0; x < _tileMap.GetLength(0); x++)
                         {
-                            if (decoration.name.Contains("Tile"))
-                                continue;
-                            decoration.enabled = false;
+                            if (t == _tileMap[x, z])
+                            {
+                                TileClicked(x, z);
+                                break;
+                            }
+                         
                         }
-
-                        //place building
-                        Vector3 position = tile.transform.position + _buildingPrefabs[_selectedBuildingPrefabIndex].transform.position;
-                        GameObject buildingObject = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], position, Quaternion.identity);
-                        Building building = buildingObject.GetComponent<Building>();
-                        tile._building = building;
-                        building.tileBuildOn = tile;
-                        building.gameManager = this;
-
-                        money -= building.buildCostMoney;
                     }
                 }
                     
@@ -253,8 +245,30 @@ public class GameManager : MonoBehaviour
         //if there is building prefab for the number input
         if (_selectedBuildingPrefabIndex < _buildingPrefabs.Length)
         {
-            //TODO: check if building can be placed and then istantiate it
+            if (t)
+            {
+                Debug.Log("Click on Tile: " + t.name);
+                if (canBuildOntile(_buildingPrefabs[_selectedBuildingPrefabIndex], t))
+                {
+                    //invisible decorations to place building
+                    foreach (MeshRenderer decoration in t.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        if (decoration.name.Contains("Tile"))
+                            continue;
+                        decoration.enabled = false;
+                    }
 
+                    //place building
+                    Vector3 position = t.transform.position + _buildingPrefabs[_selectedBuildingPrefabIndex].transform.position;
+                    GameObject buildingObject = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], position, Quaternion.identity);
+                    Building building = buildingObject.GetComponent<Building>();
+                    t._building = building;
+                    building.tileBuildOn = t;
+                    building.gameManager = this;
+
+                    money -= building.buildCostMoney;
+                }
+            }
         }
     }
 
