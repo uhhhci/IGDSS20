@@ -143,6 +143,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
         type: 3}
+      propertyPath: compatibleTileTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
       propertyPath: upkeepCost
       value: 10
       objectReference: {fileID: 0}
@@ -180,6 +185,11 @@ PrefabInstance:
         type: 3}
       propertyPath: buildingType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: compatibleTileTypes.Array.data[0]
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4739893458150596683, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
         type: 3}
@@ -240,6 +250,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LumberJackBuildingPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8664611032409491399, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f4b534fb06c6bc42bef9fec80a4dc56, type: 3}

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -17,6 +19,8 @@ public class GameManager : MonoBehaviour
     public float tileDistanceX;
     public float tileOffsetZOddRow;
     public float tileMaxOffsetY;
+
+    public float money;
 
     #region Map generation
     private Tile[,] _tileMap; //2D array of all spawned tiles
@@ -58,6 +62,7 @@ public class GameManager : MonoBehaviour
     {
         PopulateResourceDictionary();
 		createTileField();
+        InvokeRepeating("handleEconomyTick", 60, 60);
     }
 
     // Update is called once per frame
@@ -70,6 +75,24 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Methods
+
+    void handleEconomyTick()
+    {
+        money += 100;
+
+        // set tile neighbours
+        for (int z = 0; z < _tileMap.GetLength(1); z++)
+        {
+            for (int x = 0; x < _tileMap.GetLength(0); x++)
+            {
+                Tile tile = _tileMap[x, z];
+                if(tile._building != null)
+                {
+                    money -= tile._building.upkeepCost;
+                }
+            }
+        }
+    }
 
     private void handleClickOnTile()
     {
@@ -88,12 +111,7 @@ public class GameManager : MonoBehaviour
                 if (tile)
                 {
                     Debug.Log("Click on Tile: " + tile.name);
-
-                    bool canBuild = true; //todo check resources, 
-                    //if there already is a building, 
-                    // if selected building ca be build on this
-
-                    if(canBuild)
+                    if(canBuildOntile(_buildingPrefabs[_selectedBuildingPrefabIndex], tile))
                     {
                         //invisible decorations to place building
                         foreach(MeshRenderer decoration in tile.GetComponentsInChildren<MeshRenderer>())
@@ -110,11 +128,28 @@ public class GameManager : MonoBehaviour
                         tile._building = building;
                         building.tileBuildOn = tile;
                         building.gameManager = this;
+
+                        money -= building.buildCostMoney;
                     }
                 }
                     
             }
         }
+    }
+
+    bool canBuildOntile(GameObject buildingPrefab, Tile tile)
+    {
+        //workarround: instantiate to get attributes and than destroy again...
+        GameObject buildingObject = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        Building building = buildingObject.GetComponent<Building>();
+
+        bool tileTypeCompatible = Array.Exists(building.compatibleTileTypes, type => type == tile._type);
+        bool enoughMoney = money >= building.buildCostMoney;
+        bool enoughPlanks = _resourcesInWarehouse[ResourceTypes.Planks] >= building.buildCostPlanks;
+
+        Destroy(buildingObject);
+
+        return tileTypeCompatible && enoughMoney && enoughPlanks;
     }
 
     //Makes the resource dictionary usable by populating the values and keys

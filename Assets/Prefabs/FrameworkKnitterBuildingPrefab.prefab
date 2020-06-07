@@ -7,6 +7,61 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: compatibleTileTypes.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: upkeepCost
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: buildCostMoney
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: buildCostPlanks
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: resourceGenerationIntervalSeconds
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: outputCountPerCycle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: outputResourceType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: inputResourceType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: compatibleTileTypes.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: compatibleTileTypes.Array.data[1]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2734363239445603364, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
+        type: 3}
+      propertyPath: compatibleTileTypes.Array.data[2]
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4739893458150596683, guid: 3f4b534fb06c6bc42bef9fec80a4dc56,
         type: 3}
       propertyPath: m_LocalPosition.x
