@@ -4,23 +4,41 @@ using UnityEngine;
 
 public class MouseManager : MonoBehaviour
 {
+    #region Manager References
+    public static MouseManager Instance; //Singleton of this manager. Can be called with static reference MouseManager.Instance
+    private GameManager _gameManager; //Reference to GameManager.Instance
+    #endregion
 
+    #region Camera
     public Camera _camera; //The camera object
-
     private Vector3 _lastPanPosition; //The position of the mouse when the dragging begins
 
     private float PanSpeed = 200f; //Movement speed multiplier of the camera translation
     private float ZoomSpeedMouse = 50f; //Multiplier for zoom factor
 
     public float[] BoundsX = new float[2]; //Camera bounds on the X axis
-    public float[] BoundsZ = new float[2]; //Camera bounds on the ZX axis
+    public float[] BoundsZ = new float[2]; //Camera bounds on the Z axis
     public float[] ZoomBounds = new float[] { 10f, 85f }; //Zoom bounds on the Y axis
+    #endregion
 
+    #region MonoBehaviour
+    //Awake is called when creating this object
+    private void Awake()
+    {
+        if (Instance)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _gameManager = GameManager.Instance;
     }
 
     // Update is called once per frame
@@ -29,7 +47,9 @@ public class MouseManager : MonoBehaviour
         MouseSelection();
         MousePanning();
     }
+    #endregion
 
+    #region Methods
     void MouseSelection()
     {
         if (Input.GetMouseButtonDown(0))
@@ -40,7 +60,9 @@ public class MouseManager : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000f, layerMask))
             {
-                Debug.Log("You selected the " + hit.collider.name);
+                //Debug.Log("You selected the " + hit.collider.name);
+                Tile t = hit.collider.GetComponent<Tile>();
+                _gameManager.TileClicked(t._coordinateHeight, t._coordinateWidth);
             }
         }
     }
@@ -100,4 +122,5 @@ public class MouseManager : MonoBehaviour
 
         _camera.transform.position = new Vector3((Xleft + Xright) / 2, _camera.transform.position.y, (Ztop + Zbottom) / 2);
     }
+    #endregion
 }
