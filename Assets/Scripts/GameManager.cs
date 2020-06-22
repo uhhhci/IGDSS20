@@ -19,19 +19,26 @@ public class GameManager : MonoBehaviour
 
     #region Buildings
     public GameObject[] _buildingPrefabs; //References to the building prefabs
+    public Transform _buildingParentObject; //Reference to the parent object in the hierarchy for all spawned buildings
     public int _selectedBuildingPrefabIndex = 0; //The current index used for choosing a prefab to spawn from the _buildingPrefabs list
-    private List<Building> _buildings; //List of all currently spawned buildings. Used for upkeep in economy ticks
+    public List<Building> _buildings; //List of all currently spawned buildings. Used for upkeep in economy ticks
     #endregion
 
     #region Economy
     private float _economyTickRate = 60; //Every X seconds the economy will tick
     private float _economyTimer; //The current progress within an economy tick cycle
     public float _money = 50000; //The currently available money
-    private float _IncomePerPerson = 1; //Each person of the population pays taxes in every economy tick. This amount will be decided by population happiness.
+    private float _IncomePerPerson = 5; //Each person of the population pays taxes in every economy tick. This amount will be decided by population happiness.
+    #endregion
+
+    #region Population
+    public int _population; //Number of people available. Currently only one tier of workers
+    public GameObject _workerPrefab;
+    public Transform _workerParentObject; //Reference to the parent object in the hierarchy for all spawned workers
+    //public List<Worker> _workers; // All spawned workers
     #endregion
 
     #region Resources
-    public int _population; //Number of people available. Currently only one tier of workers
     public int _maximumResourceCountInWarehouse = 100; //How much of each resource can be stored in the global warehouse
     private Dictionary<ResourceTypes, float> _resourcesInWarehouse = new Dictionary<ResourceTypes, float>(); //Holds a number of stored resources for every ResourceType
 
@@ -79,6 +86,9 @@ public class GameManager : MonoBehaviour
         _mouseManager.InitializeBounds(0, _heightMap.width * 10, 0, _heightMap.height * 8.66f);
         _buildings = new List<Building>();
         PopulateResourceDictionary();
+
+        AddResourceToWarehouse(ResourceTypes.Fish, 20);
+        AddResourceToWarehouse(ResourceTypes.Planks, 20);
     }
 
     // Update is called once per frame
@@ -94,14 +104,10 @@ public class GameManager : MonoBehaviour
     //Makes the resource dictionary usable by populating the values and keys
     void PopulateResourceDictionary()
     {
-        _resourcesInWarehouse.Add(ResourceTypes.None, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Fish, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Wood, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Planks, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Wool, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Clothes, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Potato, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Schnapps, 0);
+        foreach (ResourceTypes type in ResourceTypes.GetValues(typeof(ResourceTypes)))
+        {
+            _resourcesInWarehouse.Add(type, 0);
+        }
     }
 
     //Handles the progression within an economy cycle
@@ -322,7 +328,7 @@ public class GameManager : MonoBehaviour
     public void TileClicked(int height, int width)
     {
         Tile t = _tileMap[height, width];
-        print(t._type);
+        //print(t._type);
 
         PlaceBuildingOnTile(t);
     }
@@ -338,7 +344,7 @@ public class GameManager : MonoBehaviour
 
             if (t._building == null && _money >= buildingType._buildCostMoney && _resourcesInWarehouse[ResourceTypes.Planks] >= buildingType._buildCostPlanks && buildingType._canBeBuiltOnTileTypes.Contains(t._type))
             {
-                GameObject go = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], t.transform);
+                GameObject go = Instantiate(_buildingPrefabs[_selectedBuildingPrefabIndex], _buildingParentObject);
                 go.transform.position = t.transform.position;
                 Building b = go.GetComponent<Building>();
                 b._tile = t;
@@ -365,15 +371,17 @@ public class GameManager : MonoBehaviour
     }
 
     //Subtracts the amount of the specified resource to the dictionary
-    public void RemoveResourceFromWarehouse(ResourceTypes resource, float amount)
+    public bool RemoveResourceFromWarehouse(ResourceTypes resource, float amount)
     {
         if (_resourcesInWarehouse[resource] - amount >= 0)
         {
             _resourcesInWarehouse[resource] -= amount;
+            return true;
         }
         else
         {
             _resourcesInWarehouse[resource] = 0;
+            return false;
         }
     }
 
@@ -381,6 +389,20 @@ public class GameManager : MonoBehaviour
     public bool HasResourceInWarehoues(ResourceTypes resource)
     {
         return _resourcesInWarehouse[resource] >= 1;
+    }
+
+    public Worker SpawnWorker(HousingBuilding home)
+    {
+        Worker w = Instantiate(_workerPrefab, home._tile.transform.position, Quaternion.identity).GetComponent<Worker>();
+        w.transform.SetParent(_workerParentObject);
+        w.AssignToHome(home);
+        _population++;
+        return w;
+    }
+
+    public void RemoveWorker(Worker w)
+    {
+        _population--;
     }
     #endregion
 }
