@@ -31,6 +31,10 @@ public abstract class Building : MonoBehaviour
     public List<Job> _jobs; // List of all available Jobs
     #endregion
 
+    #region Navigation
+    public NavigationManager.Map _map; //The potential fields map that will lead to this building
+    #endregion
+
     #region MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
@@ -38,6 +42,7 @@ public abstract class Building : MonoBehaviour
         _neighborTiles = _tile._neighborTiles;
         _workers = new List<Worker>();
 
+        _map = NavigationManager.Instance.GenerateMap(this);
 
         if (_availableJobs > 0)
         {
@@ -45,6 +50,7 @@ public abstract class Building : MonoBehaviour
             _jobManager = JobManager.Instance;
             _jobManager.RegisterBuilding(this, _jobs);
         }
+
     }
 
     // Update is called once per frame

@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Texture2D _heightMap; //Reference to the height map texture file
     public GameObject[] _tilePrefabs; //References to the tile prefabs
     public Transform _tileParentObject; //Reference to the parent object in the hierarchy for all spawned tiles
-    private Tile[,] _tileMap; //2D array of all spawned tiles
+    public Tile[,] _tileMap; //2D array of all spawned tiles
     private float _heightFactor = 50; //Multiplier for placement of tiles on the Y-axis
     #endregion
 
@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour
 
         AddResourceToWarehouse(ResourceTypes.Fish, 20);
         AddResourceToWarehouse(ResourceTypes.Planks, 20);
+
+        SetMapDimensions();
     }
 
     // Update is called once per frame
@@ -403,6 +405,11 @@ public class GameManager : MonoBehaviour
     public void RemoveWorker(Worker w)
     {
         _population--;
+    }
+
+    private void SetMapDimensions()
+    {
+        NavigationManager.Instance.SetDimensions(_tileMap.GetLength(0), _tileMap.GetLength(1));
     }
     #endregion
 }

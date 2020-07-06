@@ -20,6 +20,15 @@ public class Worker : MonoBehaviour
     private bool _becameOfAge = false;
     private bool _retired = false;
 
+    public Tile _navigationTarget;
+    public NavigationManager.Map _currentMap;
+    public bool _currentlyCommuting;
+    public bool _currentlyCommutingHome;
+    public bool _currentlyCommutingToWork;
+    private float _speed = 10.0f;
+
+    public Animator _animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +39,7 @@ public class Worker : MonoBehaviour
     void Update()
     {
         Age();
+        Move();
     }
 
     private void Age()
@@ -59,6 +69,14 @@ public class Worker : MonoBehaviour
         }
     }
 
+    private void Move()
+    {
+        if (_currentlyCommuting)
+        {
+            MoveToNavigationTarget();
+        }
+    }
+
     private void ConsumeResourcesAndCalculateHappiness()
     {
         bool fish = _gameManager.RemoveResourceFromWarehouse(GameManager.ResourceTypes.Fish, 2);
@@ -85,11 +103,13 @@ public class Worker : MonoBehaviour
     public void AssignToJob(Job job)
     {
         _job = job;
+        CommuteToWork();
     }
 
     public void AssignToHome(HousingBuilding home)
     {
         _home = home;
+        _navigationTarget = _home._tile;
     }
 
     public void BeBorn()
@@ -121,6 +141,89 @@ public class Worker : MonoBehaviour
         GameManager.Instance.RemoveWorker(this);
         print("A " + gameObject.name + " has died");
 
+        _currentlyCommuting = false;
+        _currentlyCommutingHome = false;
+        _currentlyCommutingToWork = false;
+
         Destroy(this.gameObject, 1f);
+    }
+
+    private void CommuteToWork()
+    {
+        _currentMap = _job._building._map;
+        _currentlyCommuting = true;
+        _currentlyCommutingToWork = true;
+    }
+
+    private void CommuteHome()
+    {
+        _currentMap = _home._map;
+        _currentlyCommuting = true;
+        _currentlyCommutingHome = true;
+    }
+
+    IEnumerator ArrivedAtWork(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        CommuteHome();
+    }
+
+    IEnumerator ArrivedAtHome(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        CommuteToWork();
+    }
+
+    private void SetNextNavigationTarget(Tile currentTile)
+    {
+        List<Tile> neighbors = currentTile._neighborTiles;
+        Tile bestTile = currentTile;
+        int bestValue = 1000000;
+        for (int i = 0; i < neighbors.Count; i++)
+        {
+            int currentValue = _currentMap.GetValue(neighbors[i]._coordinateWidth, neighbors[i]._coordinateHeight);
+            if (currentValue < bestValue)
+            {
+                bestTile = neighbors[i];
+                bestValue = currentValue;
+            }
+        }
+        _navigationTarget = bestTile;
+    }
+
+    private void MoveToNavigationTarget()
+    {
+        //_animator.Play();
+        float step = _speed * Time.deltaTime; // calculate distance to move
+        transform.LookAt(_navigationTarget.transform);
+        transform.position = Vector3.MoveTowards(transform.position, _navigationTarget.transform.position, step);
+
+        // Check if the position of the cube and sphere are approximately equal.
+        if (Vector3.Distance(transform.position, _navigationTarget.transform.position) < 0.001f)
+        {
+            ArrivedAtNavigationTarget();
+        }
+    }
+
+    private void ArrivedAtNavigationTarget()
+    {
+        if (_currentlyCommutingHome && _navigationTarget == _home._tile)
+        {
+            _currentlyCommuting = false;
+            _currentlyCommutingHome = false;
+            _currentlyCommutingToWork = false;
+            StartCoroutine(ArrivedAtHome(20 + Random.Range(0f, 2f)));
+        }
+        else if (_currentlyCommutingToWork && _navigationTarget == _job._building._tile)
+        {
+            _currentlyCommuting = false;
+            _currentlyCommutingHome = false;
+            _currentlyCommutingToWork = false;
+            StartCoroutine(ArrivedAtWork(20 + Random.Range(0f, 2f)));
+        }
+        else
+        {
+            SetNextNavigationTarget(_navigationTarget);
+        }
     }
 }
