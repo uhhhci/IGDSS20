@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -64,6 +66,18 @@ public class GameManager : MonoBehaviour
     public enum ResourceTypes { None, Fish, Wood, Planks, Wool, Clothes, Potato, Schnapps }; //Enumeration of all available resource types. Can be addressed from other scripts by calling GameManager.ResourceTypes
     #endregion
 
+    #region UI
+    public Text _uiMoneyText; //Reference to the text next to the coin icon
+    public Text _uiWorkersText; //Reference to the text next to the worker icon
+    public Text[] _uiInventory; //Reference to the texts next to the inventory icons
+    public GameObject _uiMessageWin; //Reference to the text message for game over
+    public GameObject _uiMessageLose; //Reference to the text message for game over
+    #endregion
+
+    #region Gamestate
+    public bool _gameOver;
+    #endregion
+
     #region MonoBehaviour
     //Awake is called when creating this object
     private void Awake()
@@ -96,9 +110,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleKeyboardInput();
-        UpdateEconomyTimer();
-        UpdateInspectorNumbersForResources();
+        if (!_gameOver)
+        {
+            HandleKeyboardInput();
+            UpdateEconomyTimer();
+            UpdateInspectorNumbersForResources();
+            CheckLoseConditions();
+            CheckWinConditions();
+            UpdateUI();
+        }
     }
     #endregion
 
@@ -259,21 +279,40 @@ public class GameManager : MonoBehaviour
         if (height > 0)
         {
             result.Add(_tileMap[height - 1, width]);
+            if (height % 2 == 0)
+            {
+                CheckTileEdge(t, _tileMap[height - 1, width], 4);
+            }
+            else
+            {
+                CheckTileEdge(t, _tileMap[height - 1, width], 3);
+            }
         }
         //bottom
         if (height < _heightMap.height - 1)
         {
             result.Add(_tileMap[height + 1, width]);
+            if (height % 2 == 0)
+            {
+
+                CheckTileEdge(t, _tileMap[height + 1, width], 0);
+            }
+            else
+            {
+                CheckTileEdge(t, _tileMap[height + 1, width], 1);
+            }
         }
         //left
         if (width > 0)
         {
             result.Add(_tileMap[height, width - 1]);
+            CheckTileEdge(t, _tileMap[height, width - 1], 2);
         }
         //right
         if (width < _heightMap.width - 1)
         {
             result.Add(_tileMap[height, width + 1]);
+            CheckTileEdge(t, _tileMap[height, width + 1], 5);
         }
 
         //if the column is even
@@ -283,10 +322,12 @@ public class GameManager : MonoBehaviour
             if (height > 0 && width > 0)
             {
                 result.Add(_tileMap[height - 1, width - 1]);
+                CheckTileEdge(t, _tileMap[height - 1, width - 1], 3);
             }
             if (height < _heightMap.height - 1 && width > 0)
             {
                 result.Add(_tileMap[height + 1, width - 1]);
+                CheckTileEdge(t, _tileMap[height + 1, width - 1], 1);
             }
         }
         //if the column is uneven
@@ -296,14 +337,24 @@ public class GameManager : MonoBehaviour
             if (height > 0 && width < _heightMap.width - 1)
             {
                 result.Add(_tileMap[height - 1, width + 1]);
+                CheckTileEdge(t, _tileMap[height - 1, width + 1], 4);
             }
             if (height < _heightMap.height - 1 && width < _heightMap.width - 1)
             {
                 result.Add(_tileMap[height + 1, width + 1]);
+                CheckTileEdge(t, _tileMap[height + 1, width + 1], 0);
             }
         }
 
         return result;
+    }
+
+    private void CheckTileEdge(Tile t, Tile neighbor, int edge)
+    {
+        if (t._type.Equals(neighbor._type))
+        {
+            t.HideEdge(edge);
+        }
     }
 
     //Calculates money income and upkeep when an economy cycle is completed
@@ -410,6 +461,48 @@ public class GameManager : MonoBehaviour
     private void SetMapDimensions()
     {
         NavigationManager.Instance.SetDimensions(_tileMap.GetLength(0), _tileMap.GetLength(1));
+    }
+
+    private void CheckWinConditions()
+    {
+        if (_money >= 1000000 || _population >= 2000)
+        {
+            _gameOver = true;
+            _uiMessageWin.SetActive(true);
+        }
+    }
+
+    private void CheckLoseConditions()
+    {
+        if (_money <= 0)
+        {
+            _gameOver = true;
+            _uiMessageLose.SetActive(true);
+        }
+    }
+
+    public void UI_Button_Clicked(int button)
+    {
+        _selectedBuildingPrefabIndex = button;
+    }
+
+    private void UpdateUI()
+    {
+        _uiMoneyText.text = "" + _money;
+        _uiWorkersText.text = "" + _population;
+
+        _uiInventory[0].text = "" + _ResourcesInWarehouse_Wood;
+        _uiInventory[1].text = "" + _ResourcesInWarehouse_Planks;
+        _uiInventory[2].text = "" + _ResourcesInWarehouse_Wool;
+        _uiInventory[3].text = "" + _ResourcesInWarehouse_Clothes;
+        _uiInventory[4].text = "" + _ResourcesInWarehouse_Potato;
+        _uiInventory[5].text = "" + _ResourcesInWarehouse_Schnapps;
+        _uiInventory[6].text = "" + _ResourcesInWarehouse_Fish;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     #endregion
 }
